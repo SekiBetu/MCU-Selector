@@ -34,7 +34,7 @@ jobs:
             site/data
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     needs: validate
     runs-on: ubuntu-latest
     permissions:
@@ -51,7 +51,10 @@ jobs:
         with:
           node-version: 22
       - name: Generate Pages data
-        run: npm run build:data
+        run: |
+          npm run build:data
+          test -s site/data/catalog.json
+          test -s site/data/metadata.json
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
